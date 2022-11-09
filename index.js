@@ -55,11 +55,11 @@ async function run() {
 
 
 
-        /* create a DB in mongoDB for all orders */
+        /* create a DB in mongoDB for all reviews */
         const reviewCollection = client.db('dr-shihan').collection('reviews');
 
         /* (CREATE)create single single data from client side info */
-        app.post('/reviews', verifyJWT, async (req, res) => {
+        app.post('/reviews', async (req, res) => {
             const review = req.body;
             const result = await reviewCollection.insertOne(review);
             res.send(result);
