@@ -78,6 +78,14 @@ async function run() {
             const reviews = await cursor.toArray()
             res.send(reviews)
         });
+
+        /* (DELETE) create API to delete a specific review data from server and DB */
+        app.delete('/reviews/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const result = await reviewCollection.deleteOne(query)
+            res.send(result)
+        });
     }
     finally {
 
