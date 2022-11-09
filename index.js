@@ -3,7 +3,7 @@ const cors = require('cors')
 
 const app = express()
 const port = process.env.PORT || 5000
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config() /* to hide DB credential */
 
 app.use(cors())
@@ -53,64 +53,17 @@ async function run() {
             res.send(service)
         });
 
-        /* create JWT token API */
-        app.post('/jwt', (req, res) => {
-            const user = req.body;
-            const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '7d' })
-            res.send({ token })
+
+
+        /* create a DB in mongoDB for all orders */
+        const reviewCollection = client.db('dr-shihan').collection('reviews');
+
+        /* (CREATE)create single single data from client side info */
+        app.post('/reviews', verifyJWT, async (req, res) => {
+            const review = req.body;
+            const result = await reviewCollection.insertOne(review);
+            res.send(result);
         })
-
-        // /* create a DB in mongoDB for all orders */
-        // const orderCollection = client.db('cool-car').collection('orders');
-
-        // /* (CREATE)create single single data from client side info */
-        // app.post('/orders', verifyJWT, async (req, res) => {
-        //     const order = req.body;
-        //     const result = await orderCollection.insertOne(order);
-        //     res.send(result);
-        // })
-
-        // /* (READ)create API to get all orders data */
-        // app.get('/orders', verifyJWT, async (req, res) => {
-        //     /* verify user with jwt token */
-        //     const decoded = req.decoded;
-        //     console.log(decoded)
-        //     if (decoded.email !== req.query.email) {
-        //         return res.status(403).send({ message: 'Forbidden User' })
-        //     }
-        //     let query = {}
-        //     /* find specific user's order with email */
-        //     if (req.query.email) {
-        //         query = {
-        //             email: req.query.email
-        //         }
-        //     }
-        //     const cursor = orderCollection.find(query)
-        //     const orders = await cursor.toArray()
-        //     res.send(orders)
-        // });
-
-        // /* (UPDATE) create API to partially update a specific data from server and DB */
-        // app.patch('/orders/:id', verifyJWT, async (req, res) => {
-        //     const id = req.params.id;
-        //     const status = req.body.status;
-        //     const query = { _id: ObjectId(id) }
-        //     const updatedDoc = {
-        //         $set: {
-        //             status: status
-        //         }
-        //     }
-        //     const result = await orderCollection.updateOne(query, updatedDoc);
-        //     res.send(result)
-        // });
-
-        // /* (DELETE) create API to delete a specific data from server and DB */
-        // app.delete('/orders/:id', verifyJWT, async (req, res) => {
-        //     const id = req.params.id;
-        //     const query = { _id: ObjectId(id) }
-        //     const result = await orderCollection.deleteOne(query)
-        //     res.send(result)
-        // });
     }
     finally {
 
