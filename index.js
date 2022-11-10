@@ -70,6 +70,13 @@ async function run() {
             res.send(service)
         });
 
+        /* (CREATE)create single service data from client side */
+        app.post('/services', async (req, res) => {
+            const service = req.body;
+            const result = await serviceCollection.insertOne(service);
+            res.send(result);
+        })
+
         // /* create JWT token API */
         // app.post('/jwt', (req, res) => {
         //     const user = req.body;
@@ -83,7 +90,7 @@ async function run() {
         /* (CREATE)create single single data from client side info */
         app.post('/reviews', async (req, res) => {
             const review = req.body;
-            const result = await reviewCollection.insertOne(review);
+            const result = await reviewCollection.insertOne(review).sort({ date: -1 });
             res.send(result);
         })
 
@@ -96,7 +103,7 @@ async function run() {
             //     return res.status(403).send({ message: 'Forbidden User' })
             // }
             let query = {}
-            console.log(req.query)
+
             /* find specific user's review with email */
             if (req.query.email) {
                 query = {
