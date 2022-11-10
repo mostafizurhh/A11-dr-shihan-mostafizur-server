@@ -51,13 +51,13 @@ async function run() {
         /* API to get all services */
         app.get('/services', async (req, res) => {
             const query = {}
-            const cursor = serviceCollection.find(query)
+            const cursor = serviceCollection.find(query).sort({ date: -1 })
             const services = await cursor.limit(3).toArray()
             res.send(services)
         });
         app.get('/allservices', async (req, res) => {
             const query = {}
-            const cursor = serviceCollection.find(query)
+            const cursor = serviceCollection.find(query).sort({ date: -1 })
             const services = await cursor.toArray()
             res.send(services)
         });
@@ -73,7 +73,7 @@ async function run() {
         /* (CREATE)create single service data from client side */
         app.post('/services', async (req, res) => {
             const service = req.body;
-            const result = await serviceCollection.insertOne(service);
+            const result = await serviceCollection.insertOne(service).sort({ date: -1 });
             res.send(result);
         })
 
