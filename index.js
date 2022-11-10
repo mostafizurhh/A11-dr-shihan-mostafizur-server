@@ -96,6 +96,7 @@ async function run() {
             //     return res.status(403).send({ message: 'Forbidden User' })
             // }
             let query = {}
+            console.log(req.query)
             /* find specific user's review with email */
             if (req.query.email) {
                 query = {
@@ -106,6 +107,7 @@ async function run() {
             const reviews = await cursor.toArray()
             res.send(reviews)
         });
+
 
         /* (CREATE) create API to get a specific review data from server and DB */
         app.get('/reviews/:id', async (req, res) => {
