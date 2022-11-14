@@ -1,6 +1,6 @@
 const express = require('express')
 const cors = require('cors')
-// const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken')
 const app = express()
 const port = process.env.PORT || 5000
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
@@ -73,11 +73,11 @@ async function run() {
         /* (CREATE)create single service data from client side */
         app.post('/services', async (req, res) => {
             const service = req.body;
-            const result = await serviceCollection.insertOne(service).sort({ date: -1 });
+            const result = await serviceCollection.insertOne(service);
             res.send(result);
         })
 
-        /* create JWT token API */
+        // /* create JWT token API */
         app.post('/jwt', (req, res) => {
             const user = req.body;
             const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15d' })
@@ -90,7 +90,7 @@ async function run() {
         /* (CREATE)create single single data from client side info */
         app.post('/reviews', async (req, res) => {
             const review = req.body;
-            const result = await reviewCollection.insertOne(review).sort({ date: -1 });
+            const result = await reviewCollection.insertOne(review);
             res.send(result);
         })
 
